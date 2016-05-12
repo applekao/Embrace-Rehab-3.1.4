@@ -1,0 +1,11 @@
+{
+  "name": "Embrace-Rehab",
+  "version": "0.0.1",
+  "description": "Home Rehab app",
+  "dependencies": {
+    "express": "^4.10.2",
+    "forever": "^0.15.1",
+    "nodemon": "^1.9.1",
+    "socket.io": "^1.4.5"
+  }
+}
