@@ -1,0 +1,107 @@
+/*main.css*/
+
+html{
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+}
+
+body{
+	height: 100%;
+	width: 100%;
+	margin:0px;
+	padding: 0px;
+	overflow: hidden;
+}
+
+.app{
+	height:100%;
+	width: 100%;
+	overflow: hidden;
+}
+
+.staticBar{
+    width: 100%;
+}
+
+#topNav{
+    background-color: #E77C6E;
+    padding-top: 20px;
+    height: 118px;
+    position: fixed;
+    z-index: 99;
+    left: 0px;
+    top:0px;
+    text-align: center;
+    font-size:1.5em;
+}
+
+
+#viewControlToggle{
+	margin: auto;
+	border-radius: 4em;
+	background-color: rgba(0,0,0,0.2);
+	width: 60%;
+	height: 60%;
+	position: relative;
+	top: 15%;
+	padding: 0px;
+}
+
+.panelToggle{
+	text-align: center;
+	border-radius: 4em;
+	padding-top: 1%;
+	height: 100%;
+	color:#FFF;
+	font-size: 1.6em;
+}
+
+.panelToggle_selected{
+	background-color: #FFF;
+	color: #E77C6E;
+}
+
+.row{
+	height: 100%;
+}
+
+.container{
+	height: 100%;
+}
+
+.container2Xwide{
+	width: 200% !important;
+	position: relative;
+	height: 100%;
+	top:0px;
+	left:-100%;
+	-webkit-transform:translateZ(0px);
+	-webkit-transition: left 0.5s ease-in-out;
+	/*-webkit-transform: translateX(-50%) translateZ(0px);
+	-webkit-transition: -webkit-transform 0.5s ease-in-out;*/
+}
+
+.panel{
+text-align: center;
+font-size:1.5em;
+height:100%;
+padding-top: 128px;
+}
+
+.panelTodo{
+text-align: center;
+font-size:1.5em;
+opacity: 0.93;
+}
+
+input[type=checkbox]
+{
+  /* Double-sized Checkboxes */
+  -ms-transform: scale(2); /* IE */
+  -moz-transform: scale(2); /* FF */
+  -webkit-transform: scale(2); /* Safari and Chrome */
+  -o-transform: scale(2); /* Opera */
+  padding: 10px;
+  margin-right:30px;
+}

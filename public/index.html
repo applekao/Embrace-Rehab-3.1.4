@@ -1,0 +1,209 @@
+<html>
+
+<title>擁抱復健</title>
+
+<meta name="viewport" content="user-scalable=no, initial-scale=0.5, maximum-scale=0.5, minimum-scale=0.5, target-densitydpi=device-dpi">
+
+<head>
+
+<script src = "lib/jquery/jquery-2.2.1.min.js"></script>
+
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="lib/bootstrap/css/bootstrap-theme.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="lib/bootstrap/js/bootstrap.min.js"></script>
+
+<!--BootStrap_End-->
+
+<script type="text/javascript" src = "js/user.js" ></script>
+
+<link type="text/css" rel="stylesheet" href="css/main.css">
+<link type="text/css" rel="stylesheet" href="css/panels.css">
+<script type="text/javascript" src = "js/embraceRehabFrame.js" ></script>
+<script type="text/javascript" src = "js/to_do_template.js" ></script>
+<script type="text/javascript" src = "js/chat_box_template.js" ></script>
+<script type="text/javascript" src = "js/new_to_do_template.js" ></script>
+<script type="text/javascript" src = "js/progress_template.js" ></script>
+
+<!--Parse-->
+<script src="http://www.parsecdn.com/js/parse-1.6.14.min.js"></script>
+<script type="text/javascript" src = "js/parse_script.js" ></script>
+<!--Parse_End-->
+
+<script src="/socket.io/socket.io.js"></script>
+<script type="text/javascript" src = "js/socket_script.js" ></script>
+
+<!--D3-->
+<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script type = "text/javascript" src = "js/underscore.js"></script>
+<script type = "text/javascript" src = "js/stepData.js"></script>
+<script type = "text/javascript" src = "js/progress.js"></script>
+
+<script type="text/javascript">
+var socket = io();
+
+window.addEventListener("load",function(){
+	console.log("window_loaded!");
+	
+	if (user == null){
+	 	getUser();
+	} else {
+		alert( user+ " 歡迎回來!")
+	}
+
+	anime.init();
+
+	//setTimeout(function(){
+
+	// for(i = 0; i < 4; i++){
+	// 	todo.createNew(testOption);
+	// }
+
+	// chatTest();
+	todo.addForm(testOption);
+	parseInit(); 
+	parseRefresh();
+	sendTextListener();
+	chat.broadcast("跑步機10分鐘", "老爸");
+	chat.send("我愛你老爸");
+	chat.receive("我也愛你呦");
+  //socket listener
+  socket.on('chat message', function(msg){
+  	if (msg.broadcast == true){
+  	chat.broadcast(msg.text);
+  	}else{
+  	chat.receive(msg.text)}
+  	});
+  	
+  //socket todo listener
+  // socket.on('todo', function(msg){
+  // chat.broadcast(msg)});
+
+  //get chathistory
+  $.get("http://patientnkind.com:5000/msg", function(data, status){
+      	for(i = 0; i < data.chatHistory.length; i++){
+      		if(data.chatHistory[i].broadcast == true){
+      			chat.broadcast(data.chatHistory[i].text, data.chatHistory[i].role)
+      		}else if (data.chatHistory[i].role == user){
+      			chat.send(data.chatHistory[i].text)
+      		}else{
+      			chat.receive(data.chatHistory[i].text)
+      			}
+		 }
+    });
+
+  progressInit();
+  checkProgress(testOption);
+  // socketInit();
+	//},2000);
+
+});
+
+</script>
+
+</head>
+
+
+<body>
+
+<div class = "app">
+	<div id = "newTodoList">
+		<div class= "staticBar" id = "topNav" >
+			<h1 id ='cancelBtn'>取消</h1>
+			<h1 id ='status'>新增任務</h1>
+			<h1 id ='addToParseBtn'>確定</h1>
+		</div>
+		
+		<div id = "inputForm">
+  				<img style = "position:absolute; top:4.5em ; left: 5%; " src="img/add_a_todo.png" height="60" width="60">
+
+  				<input type="text" id = "input_add_a_todo" class = "add_a_todo" placeholder = "新增一個任務">
+
+  				<img style = "position:absolute; top:15em ; left: 5%; " src="img/assign_to.png" height="60" width="60" id = "add_a_todo">
+
+  				<input list="assign_to" class = "inputStyle1" placeholder = "玩家">
+  				<datalist id="assign_to">
+  					<option value="None">
+  					<option value="Dad">
+  					<option value="Mon">
+  					<option value="Luke">
+  					<option value="Jay">
+  				</datalist>
+
+  				<img style = "position:absolute; top:23em ; left: 5%; " src="img/remider.png" height="60" width="60">
+
+  				<input list="reminder" class = "inputStyle" placeholder = "提醒">
+  				<datalist id="reminder">
+  					<option value="On">
+  					<option value="Off">
+  				</datalist>
+
+  				<img style = "position:absolute; top:32em ; left: 5%; " src="img/repeat.png" height="60" width="60">
+
+  				<input list="repeat" class = "inputStyle" placeholder = "每日重複">
+  				<datalist id="repeat">
+  					<option value="Repeat Every Day">
+  					<option value="Non-repeat">
+  				</datalist>
+
+  				<img style = "position:absolute; top:40em ; left: 5%; " src="img/add_a_note.png" height="60" width="60">
+
+  				<input type="text" class = "inputStyle" placeholder = "新增描述">
+
+  				<img style = "position:absolute; top:60em ; left: 5%; " src="img/add_a_file.png" height="60" width="60">
+
+  				<input type="file" class = "inputStyle2" placeholder = "新增檔案">
+
+
+		</div>
+
+	</div>
+
+	<div id = "progressPage" style="text-align:center;"></div>
+
+	<div class= "staticBar" id = "topNav" >
+		<img style = "position:absolute; top:30% ; left: 5%; " src="img/logo.png" height="60" width="60" id = "progressBtn">
+		<div class = "container" id = "viewControlToggle">
+			<div class="col-md-6 col-sm-6 col-xs-6 col-xl-6 panelToggle" id = "toDoBnt" switchAim = "0">任務</div>
+			<div class="col-md-6 col-sm-6 col-xs-6 col-xl-6 panelToggle panelToggle_selected" id = "chatBnt" switchAim = "1">信息</div>
+		</div>
+	</div>
+
+	<div class = "container container2Xwide" id = "mainScroll" >
+		<div class="row">
+				<div class = "col-md-6 col-sm-6 col-xs-6 col-xl-6 panel" id = "to_do_panel" >
+				<div id = "todoListBox">
+						<div id = "emptyHolder" onclick="resetFinished()">所有任務完成，太棒了！</div>
+				</div>
+
+				<button class="kc_fab_main_btn" id = "actionBtn">+</button>
+
+				</div>
+				<div class = "col-md-6 col-sm-6 col-xs-6 col-xl-6 panel" id = "chat_panel" >
+					<div id = "chatBox">
+						<div id ="noMessageHolder">沒有信息</div>
+				    </div>
+
+				     <div class="input-group input-group-lg container" id = "inputBox" >
+
+				    	<input type="text" class="col-sm-10 col-xs-10" id = "inputBar" placeholder="" ><div class="col-sm-2 col-xs-2" id="sendText">發送</div>
+
+				     </div>
+
+
+			    </div>
+		</div>
+	</div>
+</div>
+
+
+</body>
+
+
+
+</html>
